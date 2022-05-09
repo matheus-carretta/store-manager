@@ -1,4 +1,5 @@
 const productsModel = require('../models/productsModel');
+const erroHandler = require('../utils/errorCreator');
 
 const getAll = async () => {
   const products = await productsModel.getAll();
@@ -7,16 +8,18 @@ const getAll = async () => {
 };
 
 const getProduct = async (id) => {
-  const productDontExist = { status: 404, message: 'Product not found' };
-
   const product = await productsModel.getProduct(id);
 
-  if (!product) throw productDontExist;
+  if (!product) throw erroHandler(404, 'Product not found');
 
   return product;
 };
 
 const create = async (name, quantity) => {
+  const dbNameExists = await productsModel.findByName(name);
+
+  if (dbNameExists) throw erroHandler(409, 'Product already exists');
+
   const productId = await productsModel.create(name, quantity);
 
   return productId;

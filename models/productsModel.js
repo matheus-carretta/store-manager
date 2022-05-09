@@ -20,8 +20,15 @@ const create = async (name, quantity) => {
   return newProduct.insertId;
 };
 
+const findByName = async (name) => {
+  const [product] = await connection.execute('SELECT * FROM products WHERE name=?;', [name]);
+
+  return product[0];
+};
+
 module.exports = {
   getAll,
   getProduct,
   create,
+  findByName,
 };

@@ -26,7 +26,7 @@ const create = async (req, res) => {
   };
 
   return res.status(201).json(newProduct);
-}
+};
 
 module.exports = {
   getAll,
