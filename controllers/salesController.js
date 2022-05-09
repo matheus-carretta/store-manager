@@ -11,8 +11,6 @@ const getSale = async (req, res) => {
 
   const sale = await salesService.getSale(id);
 
-  console.log(sale);
-
   return res.status(200).json(sale);
 };
 

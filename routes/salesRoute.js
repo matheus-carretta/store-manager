@@ -1,8 +1,9 @@
 const router = require('express').Router();
+const rescue = require('express-rescue');
 const salesController = require('../controllers/salesController');
 
-router.get('/', salesController.getAll);
+router.get('/', rescue(salesController.getAll));
 
-router.get('/:id', salesController.getSale);
+router.get('/:id', rescue(salesController.getSale));
 
 module.exports = router;

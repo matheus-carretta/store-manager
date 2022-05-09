@@ -8,7 +8,11 @@ const getAll = async () => {
 };
 
 const getSale = async (id) => {
+  const saleDontExist = { status: 404, message: 'Sale not found' };
+
   const sale = await salesModel.getSale(id);
+
+  if (!sale || !sale.length) throw saleDontExist;
 
   return sale.map(serializeSale);
 };
