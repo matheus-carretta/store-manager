@@ -20,6 +20,16 @@ const create = async (name, quantity) => {
   return newProduct.insertId;
 };
 
+const update = async ({ id, name, quantity }) => {
+  const [updatedProduct] = await connection.execute(`
+    UPDATE products
+    SET name=?, quantity=?
+    WHERE id=?
+  `, [name, quantity, id]);
+
+  return updatedProduct;
+};
+
 const findByName = async (name) => {
   const [product] = await connection.execute('SELECT * FROM products WHERE name=?;', [name]);
 
@@ -31,4 +41,5 @@ module.exports = {
   getProduct,
   create,
   findByName,
+  update,
 };

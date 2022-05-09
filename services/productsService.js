@@ -25,8 +25,17 @@ const create = async (name, quantity) => {
   return productId;
 };
 
+const update = async (product) => {
+  const idExist = await productsModel.getProduct(product.id);
+
+  if (!idExist) throw erroHandler(404, 'Product not found');
+
+  return product;
+};
+
 module.exports = {
   getAll,
   getProduct,
   create,
+  update,
 };
