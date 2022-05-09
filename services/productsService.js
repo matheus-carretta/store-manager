@@ -22,13 +22,21 @@ const create = async (name, quantity) => {
 
   const productId = await productsModel.create(name, quantity);
 
-  return productId;
+  const newProduct = {
+    id: productId,
+    name,
+    quantity,
+  };
+
+  return newProduct;
 };
 
 const update = async (product) => {
   const idExist = await productsModel.getProduct(product.id);
 
   if (!idExist) throw erroHandler(404, 'Product not found');
+
+  await productsModel.update(product);
 
   return product;
 };

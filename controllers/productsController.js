@@ -17,13 +17,7 @@ const getProduct = async (req, res) => {
 const create = async (req, res) => {
   const { name, quantity } = req.body;
 
-  const newId = await productsService.create(name, quantity);
-
-  const newProduct = {
-    id: newId,
-    name,
-    quantity,
-  };
+  const newProduct = await productsService.create(name, quantity);
 
   return res.status(201).json(newProduct);
 };
