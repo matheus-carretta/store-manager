@@ -1,5 +1,6 @@
 const salesModel = require('../models/salesModel');
 const { serializeSale, serializeSales } = require('../utils/serialize');
+const erroHandler = require('../utils/errorCreator');
 
 const getAll = async () => {
   const sales = await salesModel.getAll();
@@ -8,11 +9,9 @@ const getAll = async () => {
 };
 
 const getSale = async (id) => {
-  const saleDontExist = { status: 404, message: 'Sale not found' };
-
   const sale = await salesModel.getSale(id);
 
-  if (!sale || !sale.length) throw saleDontExist;
+  if (!sale || !sale.length) throw erroHandler(404, 'Sale not found');
 
   return sale.map(serializeSale);
 };
