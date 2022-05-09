@@ -6,7 +6,7 @@ const PRODUCT = Joi.object({
   quantity: Joi.number().min(1).required(),
 });
 
-const validateName = (req, _res, next) => {
+const validateProduct = (req, _res, next) => {
   const { name, quantity } = req.body;
 
   const { error } = PRODUCT.validate({ name, quantity });
@@ -20,5 +20,5 @@ const validateName = (req, _res, next) => {
 };
 
 module.exports = {
-  validateName,
+  validateProduct,
 };

@@ -14,7 +14,7 @@ const getSale = async (req, res) => {
   return res.status(200).json(sale);
 };
 
-const create = (req, res) => res.status(100).json({ message: 'Teste' });
+const create = (req, res) => res.status(200).json({ message: 'Teste' });
 
 module.exports = {
   getAll,
