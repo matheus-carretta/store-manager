@@ -30,6 +30,15 @@ const update = async ({ id, name, quantity }) => {
   return updatedProduct;
 };
 
+const remove = async (id) => {
+  const deletedProduct = await connection.execute(`
+    DELETE FROM products
+    WHERE id=?
+  `, [id]);
+
+  return deletedProduct;
+};
+
 const findByName = async (name) => {
   const [product] = await connection.execute('SELECT * FROM products WHERE name=?;', [name]);
 
@@ -42,4 +51,5 @@ module.exports = {
   create,
   findByName,
   update,
+  remove,
 };
