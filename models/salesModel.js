@@ -21,7 +21,27 @@ const getSale = async (id) => {
   return sales;
 };
 
+const create = async () => {
+  const [newSale] = await connection.execute(`
+    INSERT INTO sales (date) 
+    VALUES (?);
+  `, [new Date()]);
+
+  return newSale.insertId;
+};
+
+const createSalePerProduct = async (saleId, sale) => {
+  const [salePerProductId] = await connection.execute(`
+    INSERT INTO sales_products (sale_id, product_id, quantity)
+    VALUES (?, ?, ?);
+  `, [saleId, sale.productId, sale.quantity]);
+
+  return salePerProductId;
+};
+
 module.exports = {
   getAll,
   getSale,
+  create,
+  createSalePerProduct,
 };

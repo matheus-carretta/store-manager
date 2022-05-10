@@ -16,7 +16,21 @@ const getSale = async (id) => {
   return sale.map(serializeSale);
 };
 
+const create = async (arraySales) => {
+  const newSaleId = await salesModel.create();
+
+  arraySales.map((sale) => salesModel.createSalePerProduct(newSaleId, sale));
+
+  const newSale = {
+    id: newSaleId,
+    itemsSold: arraySales,
+  };
+
+  return newSale;
+};
+
 module.exports = {
   getAll,
   getSale,
+  create,
 };
