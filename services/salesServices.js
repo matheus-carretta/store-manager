@@ -19,7 +19,7 @@ const getSale = async (id) => {
 const create = async (arraySales) => {
   const newSaleId = await salesModel.create();
 
-  arraySales.map((sale) => salesModel.createSalePerProduct(newSaleId, sale));
+  await arraySales.map((sale) => salesModel.createSalePerProduct(newSaleId, sale));
 
   const newSale = {
     id: newSaleId,
@@ -29,8 +29,20 @@ const create = async (arraySales) => {
   return newSale;
 };
 
+const update = async (id, arraySales) => {
+  await arraySales.map((sale) => salesModel.update(id, sale));
+
+  const updatedSale = {
+    saleId: id,
+    itemUpdated: arraySales,
+  };
+
+  return updatedSale;
+};
+
 module.exports = {
   getAll,
   getSale,
   create,
+  update,
 };

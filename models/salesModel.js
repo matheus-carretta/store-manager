@@ -30,13 +30,23 @@ const create = async () => {
   return newSale.insertId;
 };
 
-const createSalePerProduct = async (saleId, sale) => {
+const createSalePerProduct = async (saleId, { productId, quantity }) => {
   const [salePerProductId] = await connection.execute(`
     INSERT INTO sales_products (sale_id, product_id, quantity)
     VALUES (?, ?, ?);
-  `, [saleId, sale.productId, sale.quantity]);
+  `, [saleId, productId, quantity]);
 
   return salePerProductId;
+};
+
+const update = async (saleId, { productId, quantity }) => {
+  const [updatedSale] = await connection.execute(`
+    UPDATE sales_products
+    SET product_id=?, quantity=?
+    WHERE sale_id=?
+  `, [productId, quantity, saleId]);
+
+  return updatedSale;
 };
 
 module.exports = {
@@ -44,4 +54,5 @@ module.exports = {
   getSale,
   create,
   createSalePerProduct,
+  update,
 };
