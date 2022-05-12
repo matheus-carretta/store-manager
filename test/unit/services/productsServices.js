@@ -12,9 +12,7 @@ describe('Ao executar o getAll da service', () => {
 	}];
 
   before(async () => {
-    const execute = payloadProduct;
-
-    sinon.stub(productsModel, 'getAll').resolves(execute);
+    sinon.stub(productsModel, 'getAll').resolves(payloadProduct);
   });
 
   after(async () => {

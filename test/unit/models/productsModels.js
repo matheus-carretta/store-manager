@@ -12,9 +12,7 @@ describe('Ao executar o getAll da model', () => {
 	}]];
 
   before(async () => {
-    const execute = payloadProduct;
-
-    sinon.stub(connection, 'execute').resolves(execute);
+    sinon.stub(connection, 'execute').resolves(payloadProduct);
   });
 
   after(async () => {
