@@ -4,7 +4,7 @@ const sinon = require('sinon');
 const productsService = require('../../../services/productsService');
 const productsController = require('../../../controllers/productsController');
 
-describe('Ao executar o getAll da service', () => {
+describe('Ao executar o getAll da controller', () => {
   const req = {};
   const res = {};
   const payloadProduct = [{
