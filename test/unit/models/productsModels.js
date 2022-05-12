@@ -27,14 +27,10 @@ describe('Quando busca todos os produtos', () => {
       expect(response).to.be.a('array');
     });
 
-    it('o array possui um objeto com id, name, quantity', async () => {
+    it('o array possui objetos com as propriedades id, name, quantity', async () => {
       const [response] = await productsModel.getAll();
 
-      expect(response).to.deep.equals({
-        "id": 1,
-        "name": "Martelo de Thor",
-        "quantity": 10
-      });
+      expect(response).to.have.all.keys('id', 'name', 'quantity');
     });
 
 });
