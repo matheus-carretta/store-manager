@@ -2,23 +2,23 @@ const { expect } = require('chai');
 const sinon = require('sinon');
 
 const productsService = require('../../../services/productsService');
-const connection = require('../../../models/connection')
+const productsModel = require('../../../models/productsModel');
 
 describe('Ao executar o getAll da service', () => {
-  const payloadProduct = [[{
+  const payloadProduct = [{
 		"id": 1,
 		"name": "Martelo de Thor",
 		"quantity": 10
-	}]];
+	}];
 
   before(async () => {
     const execute = payloadProduct;
 
-    sinon.stub(connection, 'execute').resolves(execute);
+    sinon.stub(productsModel, 'getAll').resolves(execute);
   });
 
   after(async () => {
-    connection.execute.restore();
+    productsModel.getAll.restore();
   });
 
     it('retorna um array', async () => {
