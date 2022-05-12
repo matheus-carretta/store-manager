@@ -4,7 +4,7 @@ const sinon = require('sinon');
 const productsModel = require('../../../models/productsModel');
 const connection = require('../../../models/connection')
 
-describe('Quando busca todos os produtos', () => {
+describe('Ao executar o getAll da model', () => {
   const payloadProduct = [[{
 		"id": 1,
 		"name": "Martelo de Thor",
