@@ -17,13 +17,30 @@ const getSale = async (id) => {
   return sale.map(serializeSale);
 };
 
+const verifyStock = async (arraySales) => {
+  const enoughStock = await Promise.all(arraySales.map(async ({ productId, quantity }) => {
+    const { quantity: actualQuantity } = await productsModel.getProduct(productId);
+    if (actualQuantity < quantity) {
+      return false;
+    }
+    return true;
+  }));
+  return enoughStock;
+};
+
 const create = async (arraySales) => {
+  const dontHaveStock = await verifyStock(arraySales);
+  
+  dontHaveStock.forEach((haveStock) => {
+    if (!haveStock) throw erroHandler(422, 'Such amount is not permitted to sell');
+  });
+
   const newSaleId = await salesModel.create();
 
-  await arraySales.map((sale) => {
+  await (arraySales.forEach(async (sale) => {
     productsModel.decreaseStock(sale.productId, sale.quantity);
-    return salesModel.createSalePerProduct(newSaleId, sale);
-  });
+    salesModel.createSalePerProduct(newSaleId, sale);
+  }));
 
   const newSale = {
     id: newSaleId,
