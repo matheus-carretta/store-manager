@@ -21,7 +21,7 @@ const verifyStock = async (arraySales) => {
   const enoughStock = await Promise.all(arraySales.map(async ({ productId, quantity }) => {
     const { quantity: actualQuantity } = await productsModel.getProduct(productId);
     if (actualQuantity < quantity) {
-      return false;
+      throw erroHandler(422, 'Such amount is not permitted to sell');
     }
     return true;
   }));
@@ -29,18 +29,14 @@ const verifyStock = async (arraySales) => {
 };
 
 const create = async (arraySales) => {
-  const dontHaveStock = await verifyStock(arraySales);
+  await verifyStock(arraySales);
   
-  dontHaveStock.forEach((haveStock) => {
-    if (!haveStock) throw erroHandler(422, 'Such amount is not permitted to sell');
-  });
-
   const newSaleId = await salesModel.create();
 
-  await (arraySales.forEach(async (sale) => {
+  await Promise.all((arraySales.map(async (sale) => {
     productsModel.decreaseStock(sale.productId, sale.quantity);
     salesModel.createSalePerProduct(newSaleId, sale);
-  }));
+  })));
 
   const newSale = {
     id: newSaleId,
@@ -51,7 +47,7 @@ const create = async (arraySales) => {
 };
 
 const update = async (id, arraySales) => {
-  await arraySales.map((sale) => salesModel.update(id, sale));
+  await Promise.all(arraySales.map((sale) => salesModel.update(id, sale)));
 
   const updatedSale = {
     saleId: id,
@@ -66,7 +62,8 @@ const remove = async (id) => {
 
   if (!sales || !sales.length) throw erroHandler(404, 'Sale not found');
 
-  await sales.map(({ product_id, quantity }) => productsModel.increaseStock(product_id, quantity));
+  await Promise.all(sales.map(({ product_id, quantity }) =>
+   productsModel.increaseStock(product_id, quantity)));
 
   await salesModel.removeSalePerProduct(id);
 
