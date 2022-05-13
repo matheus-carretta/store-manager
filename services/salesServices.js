@@ -45,6 +45,8 @@ const remove = async (id) => {
 
   if (!idExist || !idExist.length) throw erroHandler(404, 'Sale not found');
 
+  await salesModel.removeSalePerProduct(id);
+
   const deleted = await salesModel.remove(id);
 
   return deleted;

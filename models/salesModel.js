@@ -58,6 +58,15 @@ const remove = async (saleId) => {
   return deletedSale;
 };
 
+const removeSalePerProduct = async (saleId) => {
+  const deletedSale = await connection.execute(`
+    DELETE FROM sales_products
+    WHERE sale_id=?
+  `, [saleId]);
+
+  return deletedSale;
+};
+
 module.exports = {
   getAll,
   getSale,
@@ -65,4 +74,5 @@ module.exports = {
   createSalePerProduct,
   update,
   remove,
+  removeSalePerProduct,
 };
