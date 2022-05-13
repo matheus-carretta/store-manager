@@ -45,6 +45,26 @@ const findByName = async (name) => {
   return product[0];
 };
 
+const decreaseStock = async (productId, quantity) => {
+  const [updatedProduct] = await connection.execute(`
+    UPDATE products
+    SET quantity= quantity - ?
+    WHERE id=?
+  `, [quantity, productId]);
+
+  return updatedProduct;
+};
+
+const increaseStock = async (productId, quantity) => {
+  const [updatedProduct] = await connection.execute(`
+    UPDATE products
+    SET quantity= quantity + ?
+    WHERE id=?
+  `, [quantity, productId]);
+
+  return updatedProduct;
+};
+
 module.exports = {
   getAll,
   getProduct,
@@ -52,4 +72,6 @@ module.exports = {
   findByName,
   update,
   remove,
+  decreaseStock,
+  increaseStock,
 };

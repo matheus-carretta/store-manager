@@ -1,4 +1,5 @@
 const salesModel = require('../models/salesModel');
+const productsModel = require('../models/productsModel');
 const { serializeSale, serializeSales } = require('../utils/serialize');
 const erroHandler = require('../utils/errorCreator');
 
@@ -19,7 +20,10 @@ const getSale = async (id) => {
 const create = async (arraySales) => {
   const newSaleId = await salesModel.create();
 
-  await arraySales.map((sale) => salesModel.createSalePerProduct(newSaleId, sale));
+  await arraySales.map((sale) => {
+    productsModel.decreaseStock(sale.productId, sale.quantity);
+    return salesModel.createSalePerProduct(newSaleId, sale);
+  });
 
   const newSale = {
     id: newSaleId,
@@ -41,9 +45,11 @@ const update = async (id, arraySales) => {
 };
 
 const remove = async (id) => {
-  const idExist = await salesModel.getSale(id);
+  const sales = await salesModel.getSale(id);
 
-  if (!idExist || !idExist.length) throw erroHandler(404, 'Sale not found');
+  if (!sales || !sales.length) throw erroHandler(404, 'Sale not found');
+
+  await sales.map(({ product_id, quantity }) => productsModel.increaseStock(product_id, quantity));
 
   await salesModel.removeSalePerProduct(id);
 
