@@ -40,9 +40,20 @@ const update = async (id, arraySales) => {
   return updatedSale;
 };
 
+const remove = async (id) => {
+  const idExist = await salesModel.getSale(id);
+
+  if (!idExist || !idExist.length) throw erroHandler(404, 'Sale not found');
+
+  const deleted = await salesModel.remove(id);
+
+  return deleted;
+};
+
 module.exports = {
   getAll,
   getSale,
   create,
   update,
+  remove,
 };
