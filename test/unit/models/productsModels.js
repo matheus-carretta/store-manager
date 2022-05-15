@@ -88,4 +88,26 @@ describe("Ao usar o getProduct da model", () => {
     })
 
   })
-})
+});
+
+describe('Ao usar o create da model', () => {
+  const payload = [
+    { insertId: 1 }
+  ];
+
+  const newMovie =   { "name": "produto", "quantity": 10 };
+
+  before(async () => {
+    sinon.stub(connection, 'execute').resolves(payload);
+  });
+  
+  after(async () => {
+    connection.execute.restore();
+  })
+
+  it('retorna o id do novo produto', async () => {
+    const response = await productsModel.create(newMovie);
+    
+    expect(response).to.be.equal(1);
+  })
+});
