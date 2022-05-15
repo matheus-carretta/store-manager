@@ -35,7 +35,7 @@ describe('Ao executar o getAll da service', () => {
 
 describe("Ao usar o getProduct da services", () => {
   describe('e não encontra um produto', () => {
-    const payload = [];
+    const payload = undefined;
     const id = 10;
 
     before(async () => {
@@ -46,18 +46,16 @@ describe("Ao usar o getProduct da services", () => {
       productsModel.getProduct.restore();
     })
 
-    it('retorna um array', async () => {
-      const response = await productsService.getProduct(id);
+    it('retorna um erro 404 com a messagem "Product not found"', async() => {
+      try {
+        await productsService.getProduct(id)
+      } catch(error) {
+        expect(error.status).to.be.equal(404);
+        expect(error.message).to.be.equal('Product not found');
+      };
+    });
 
-      expect(response).to.be.a('array');
-    })
-
-    it('e esse array está vazio', async () => {
-      const response = await productsService.getProduct(id);
-
-      expect(response).to.be.empty;
-    })
-  })
+  });
 
   describe('quando encontra um produto', () => {
     const id = 1;
