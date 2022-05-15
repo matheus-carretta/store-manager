@@ -86,6 +86,8 @@ describe('Ao executar o getAll de service', () => {
         expect(error.status).to.be.equal(404);
         expect(error.message).to.be.equal('Sale not found');
       }
-    })
-  })
-})
+    });
+
+  });
+
+});
