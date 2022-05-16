@@ -85,5 +85,60 @@ describe("Ao usar o getProduct da services", () => {
       expect(response).to.have.all.keys('id', 'name', 'quantity');
     })
 
-  })
-})
+  });
+});
+
+describe('Ao usar a create da services', () => {
+  describe('e o produto ainda não existe', () => {
+    const payloadName = undefined;
+    const payloadCreate = 1;
+    const newProduct =   { "name": "produto", "quantity": 10 };
+
+    before(async () => {
+      sinon.stub(productsModel, 'create').resolves(payloadCreate);
+      sinon.stub(productsModel, 'findByName').resolves(payloadName);
+    });
+
+    after(async () => {
+      productsModel.create.restore();
+      productsModel.findByName.restore();
+    });
+
+    it('retorna um objeto', async () => {
+      const response = await productsService.create(newProduct);
+
+      expect(response).to.be.a('object');
+    });
+
+    it('com as propriedades', async () => {
+      const response = await productsService.create(newProduct);
+
+      expect(response).to.have.all.keys('id', 'name', 'quantity');
+    });
+  });
+
+  describe('e o produto já existe', () => {
+    const payloadName = { "name": "produto", "quantity": 10 };
+    const payloadCreate = 1;
+
+    before(async () => {
+      sinon.stub(productsModel, 'create').resolves(payloadCreate);
+      sinon.stub(productsModel, 'findByName').resolves(payloadName);
+    });
+
+    after(async () => {
+      productsModel.create.restore();
+      productsModel.findByName.restore();
+    });
+
+    it('retorna um erro 409 com a message "Product already exists"', async () => {
+      try {
+        await productsService.create(payloadName);
+      } catch(error) {
+        expect(error.status).to.be.equal(409);
+        expect(error.message).to.be.equal('Product already exists');
+      };
+    });
+  });
+
+});

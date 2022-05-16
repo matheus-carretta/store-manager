@@ -95,7 +95,7 @@ describe('Ao usar o create da model', () => {
     { insertId: 1 }
   ];
 
-  const newMovie =   { "name": "produto", "quantity": 10 };
+  const newProduct =   { "name": "produto", "quantity": 10 };
 
   before(async () => {
     sinon.stub(connection, 'execute').resolves(payload);
@@ -106,7 +106,7 @@ describe('Ao usar o create da model', () => {
   })
 
   it('retorna o id do novo produto', async () => {
-    const response = await productsModel.create(newMovie);
+    const response = await productsModel.create(newProduct);
     
     expect(response).to.be.equal(1);
   })
