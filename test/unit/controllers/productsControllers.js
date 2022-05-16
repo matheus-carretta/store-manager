@@ -80,3 +80,41 @@ describe('Ao executar o getProduct da controller', () => {
   });
 
 });
+
+describe('Ao executar a create da controller', () => {
+  const req = {};
+  const res = {};
+  const payload = {
+    "id": 1,
+    "name": "Martelo de Thor",
+    "quantity": 10
+  };
+
+  const newProduct = { "name": "produto", "quantity": 10 };
+
+  before(async () => {
+    req.body = newProduct;
+
+    res.status = sinon.stub().returns(res);
+  
+    res.json = sinon.stub().returns(payload);
+  
+    sinon.stub(productsService, 'create').resolves(payload);
+  });
+
+  after(async () => {
+    productsService.create.restore();
+  });
+
+  it('retorna um objeto', async () => {
+    await productsController.create(req, res);
+
+    expect(res.json.calledWith(payload)).to.be.equal(true);
+  });
+
+  it('com o status 201', async () => {
+    await productsController.create(req, res);
+
+    expect(res.status.calledWith(201)).to.be.equal(true);
+  });
+});
