@@ -2,6 +2,7 @@ const { expect } = require('chai');
 const sinon = require('sinon');
 
 const salesModel = require('../../../models/salesModel');
+const productsModel = require('../../../models/productsModel');
 const salesService = require('../../../services/salesServices');
 
 describe('Ao executar o getAll de service', () => { 
@@ -28,7 +29,7 @@ describe('Ao executar o getAll de service', () => {
   })
 
   it('cada objeto possui a chave saleId, date, productId e quantity ', async () => {
-    const [response] = await salesModel.getAll();
+    const [response] = await salesService.getAll();
 
     expect(response).to.have.all.keys('saleId', 'productId', 'quantity', 'date');
   });
@@ -54,15 +55,15 @@ describe('Ao executar o getAll de service', () => {
     })
 
     it('retorna um array', async () => {
-      const response = await salesModel.getSale(id);
+      const response = await salesService.getSale(id);
 
       expect(response).to.be.a('array');
     });
 
     it('cada objeto possui a chave saleId, date, productId e quantity ', async () => {
-      const [response] = await salesModel.getSale(id);
+      const [response] = await salesService.getSale(id);
   
-      expect(response).to.have.all.keys('saleId', 'productId', 'quantity', 'date');
+      expect(response).to.have.all.keys('productId', 'quantity', 'date');
     });
 
   });
@@ -90,4 +91,41 @@ describe('Ao executar o getAll de service', () => {
 
   });
 
+});
+
+describe('Ao executar a create de service', () => { 
+  const payloadSales =  [
+      {
+        "productId": 1,
+        "quantity": 3
+      }
+  ];
+  const saleId = 1;
+
+
+  before(async () => {
+    sinon.stub(salesModel, 'create').resolves(saleId);
+    sinon.stub(salesService, 'verifyStock').resolves();
+    sinon.stub(productsModel, 'decreaseStock').resolves();
+    sinon.stub(salesModel, 'createSalePerProduct').resolves();
+  })
+
+  after(async () => {
+    salesModel.create.restore();
+    salesService.verifyStock.restore();
+    productsModel.decreaseStock.restore();
+    salesModel.createSalePerProduct.restore();
+  })
+    
+  it('retorna um objeto', async () => {
+    const response = await salesService.create(payloadSales);
+    
+    expect(response).to.be.a('object');
+  })
+
+  it('cada objeto possui a chave saleId, date, productId e quantity ', async () => {
+    const response = await salesService.create(payloadSales);
+
+    expect(response).to.have.all.keys('id', 'itemsSold');
+  });
 });
