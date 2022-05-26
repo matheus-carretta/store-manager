@@ -77,3 +77,43 @@ describe('Ao executar o getSale da controller', () => {
       expect(res.status.calledWith(200)).to.be.equal(true);
     });
 });
+
+describe('Ao executar o create da controller', () => {
+  const req = {};
+  const res = {};
+  const payloadSales = {
+    "id": 1,
+    "itemsSold": [
+      {
+        "productId": 1,
+        "quantity": 3
+      }
+    ]
+  };
+
+  before(async () => {
+    res.status = sinon.stub()
+    .returns(res);
+
+    res.json = sinon.stub()
+    .returns(payloadSales);
+
+    sinon.stub(salesService, 'create').resolves(payloadSales);
+  });
+
+  after(async () => {
+    salesService.create.restore();
+  });
+
+    it('retorna um objeto com a venda criada', async () => {
+      await salesController.create(req, res);
+
+      expect(res.json.calledWith(payloadSales)).to.be.equal(true);
+    });
+
+    it('e retorna o status 201', async () => {
+      await salesController.create(req, res);
+
+      expect(res.status.calledWith(201)).to.be.equal(true);
+    });
+});
