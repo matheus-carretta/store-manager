@@ -104,17 +104,19 @@ describe('Ao executar a create de service', () => {
 
 
   before(async () => {
+    sinon.stub(salesService, 'verifyStock').resolves(payloadSales);
     sinon.stub(salesModel, 'create').resolves(saleId);
-    sinon.stub(salesService, 'verifyStock').resolves();
-    sinon.stub(productsModel, 'decreaseStock').resolves();
-    sinon.stub(salesModel, 'createSalePerProduct').resolves();
+    sinon.stub(productsModel, 'decreaseStock').resolves(1, 3);
+    sinon.stub(salesModel, 'createSalePerProduct').resolves(saleId, payloadSales);
+    sinon.stub(productsModel, 'getProduct').resolves(2);
   })
 
   after(async () => {
-    salesModel.create.restore();
     salesService.verifyStock.restore();
+    salesModel.create.restore();
     productsModel.decreaseStock.restore();
     salesModel.createSalePerProduct.restore();
+    productsModel.getProduct.restore();
   })
     
   it('retorna um objeto', async () => {
@@ -123,7 +125,7 @@ describe('Ao executar a create de service', () => {
     expect(response).to.be.a('object');
   })
 
-  it('cada objeto possui a chave saleId, date, productId e quantity ', async () => {
+  it('cada objeto possui a chave id e itemsSold', async () => {
     const response = await salesService.create(payloadSales);
 
     expect(response).to.have.all.keys('id', 'itemsSold');
