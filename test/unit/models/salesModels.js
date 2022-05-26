@@ -66,3 +66,58 @@ describe('Ao executar o getAll da model', () => {
   });
 
 });
+
+describe('Ao executar o create da model', () => {
+  const payload = [{
+    insertId: 1,
+  }];
+
+  before(async () => {
+    sinon.stub(connection, 'execute').resolves(payload);
+  });
+
+  after(async () => {
+    connection.execute.restore();
+  });
+
+  it('Retorna o id da nova venda', async () => {
+    const response = await salesModel.create();
+
+    expect(response).to.be.equals(1);
+  });
+
+});
+
+describe('Ao executar o createSalePerProduct da model', () => {
+  const payload = [{
+    affectedRows: 1,
+  }];
+
+  const id = 1;
+  const fakeSale = [
+    {
+      "productId": 1,
+      "quantity": 2
+    }];
+
+  before(async () => {
+    sinon.stub(connection, 'execute').resolves(payload);
+  });
+
+  after(async () => {
+    connection.execute.restore();
+  });
+
+  it('Retorna um objeto', async () => {
+    const response = await salesModel.createSalePerProduct(id, fakeSale);
+
+    expect(response).to.be.a('object');
+  });
+
+  it('Que possui a chave affectedRows', async () => {
+    const response = await salesModel.createSalePerProduct(id, fakeSale);
+
+    expect(response).to.be.key('affectedRows');
+  });
+
+});

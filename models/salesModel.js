@@ -35,6 +35,7 @@ const createSalePerProduct = async (saleId, { productId, quantity }) => {
     INSERT INTO sales_products (sale_id, product_id, quantity)
     VALUES (?, ?, ?);
   `, [saleId, productId, quantity]);
+  console.log(salePerProductId);
 
   return salePerProductId;
 };
